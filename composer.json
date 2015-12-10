@@ -1,8 +1,8 @@
 {
-    "name"  : "kakserpom/quicky",
+    "name"  : "tombouctou/quicky",
     "type"  : "library",
     "keywords": ["quicky"],
-    "homepage": "https://github.com/kakserpom/quicky",
+    "homepage": "https://github.com/tombouctou/quicky",
     "license" : "GPL-3.0+",
     "description": "",
     "authors" : [
