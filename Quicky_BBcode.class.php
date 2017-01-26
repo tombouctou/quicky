@@ -182,7 +182,7 @@ class Quicky_BBcode {
 					}
 					else {
 						$block_params = $this->_parse_params($mixed[2]);
-						$url          = isset($block_params['src']) ? $block_params['src'] : '';
+						$url = isset($block_params['src']) ? $block_params['src'] : '';
 					}
 					$url = $this->_dequote($url);
 					if ($url === '') {
@@ -194,7 +194,10 @@ class Quicky_BBcode {
 					if ($this->urlCallback !== null) {
 						$url = call_user_func($this->urlCallback, $url);
 					}
-					return '<a href="' . htmlspecialchars($url) . '" target="_blank">' . $this->_tag_token($block_content) . '</a>';
+					$linkText = $this->hideUrls
+						? '~link hidden~'
+						: $this->_tag_token($block_content);
+					return '<a href="' . htmlspecialchars($url) . '" target="_blank">' . $linkText . '</a>';
 				}
 				elseif ($block_type === 'youtube') {
 					$block_content = trim($block_content);
@@ -211,13 +214,13 @@ class Quicky_BBcode {
 					else {
 						$s = str_replace("\r", '', '<?php' . "\n" . $s . ' ?>');
 					}
-					$s    = @highlight_string($s, TRUE);
-					$s    = substr_replace($s, '', strpos($s, '&lt;?php'), 8);
-					$s    = substr_replace($s, '', strrpos($s, '?&gt;'), 5);
+					$s = @highlight_string($s, TRUE);
+					$s = substr_replace($s, '', strpos($s, '&lt;?php'), 8);
+					$s = substr_replace($s, '', strrpos($s, '?&gt;'), 5);
 					$from = 0;
-					$x    = 0;
+					$x = 0;
 					while ($i = strpos($s, '<br />', $from)) {
-						$s    = substr($s, 0, $x == 0 ? $i : $i + 6) . "\n" .
+						$s = substr($s, 0, $x == 0 ? $i : $i + 6) . "\n" .
 								'<font style="color:#000000;background-color:#eeeeee;">&nbsp;' . sprintf('%03d', $x + 1) .
 								'&nbsp;</font>&nbsp;' . substr($s, $i + 6);
 						$from = $i + 5;
@@ -250,7 +253,7 @@ class Quicky_BBcode {
 					}
 					else {
 						$block_params = $this->_parse_params($mixed[2]);
-						$email        = isset($block_params['address']) ? $this->_dequote($block_params['address']) : '';
+						$email = isset($block_params['address']) ? $this->_dequote($block_params['address']) : '';
 					}
 					if ($email === '') {
 						$email = $block_content;
@@ -328,7 +331,7 @@ class Quicky_BBcode {
 					if ($tag === FALSE or $tag[1]) {
 						return '';
 					}
-					$tag             = $tag[0];
+					$tag = $tag[0];
 					$bs[key($el)][1] = TRUE;
 				}
 				elseif ($close) {
@@ -336,7 +339,7 @@ class Quicky_BBcode {
 					for ($i = sizeof($bs) - 1; $i >= 0; --$i) {
 						if ((!$bs[$i][1]) and ($bs[$i][0] == $tag)) {
 							$bs[$i][1] = TRUE;
-							$found     = TRUE;
+							$found = TRUE;
 							break;
 						}
 					}
@@ -346,7 +349,7 @@ class Quicky_BBcode {
 				}
 				$return = $this->_exec_tag($close, $tag, $param);
 				if (!$close and !in_array($tag, array('hr')) and ($return !== FALSE)) {
-					$bs[]                            = array($tag, FALSE);
+					$bs[] = array($tag, FALSE);
 					$c_offsets[$this->block_stack_n] = 0;
 				}
 				return $return;
@@ -514,9 +517,9 @@ class Quicky_BBcode {
 
 	public function getHTML() {
 		$this->block_stacks  = array();
-		$this->errors        = array();
+		$this->errors = array();
 		$this->block_stack_n = 0;
-		$this->stat          = array();
+		$this->stat = array();
 		if ($this->use_stat) {
 			$this->stat = array(
 				'numblocks' => 0,
