@@ -51,6 +51,7 @@ class Quicky_BBcode {
 	public $autourl = TRUE;
 	public $allow_smiles = TRUE;
 	public $urlCallback;
+	protected $hideUrls = FALSE;
 
 	public function __construct() {
 	}
@@ -151,7 +152,9 @@ class Quicky_BBcode {
 					$url = call_user_func($this->urlCallback, $url);
 				}
 				$urlEscaped = htmlspecialchars($url);
-				$origUrlEscaped = htmlspecialchars($origUrl);
+				$origUrlEscaped = $this->hideUrls
+					? '~link hidden~'
+					: htmlspecialchars($origUrl);
 				return '<a href="' . $urlEscaped . '" target="_blank">' . $origUrlEscaped . '</a>';
 			}
 			if ($mixed[1] !== '') {
